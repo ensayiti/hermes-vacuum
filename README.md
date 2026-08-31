@@ -29,10 +29,24 @@ Disk fills up from `Temp`, `npm-cache`, `cargo`, `thumbcache`, `Hermes cache` pi
 
 ## Installation
 
+**Windows, 1 line:**
+
+```powershell
+irm https://raw.githubusercontent.com/ensayiti/hermes-vacuum/main/install.ps1 | iex
+```
+
+**macOS and Linux, 1 line:**
+
 ```bash
-hermes skills install https://raw.githubusercontent.com/ensayiti/hermes-vacuum/main/SKILL.md --name hermes-vacuum
-# or local
+curl -fsSL https://raw.githubusercontent.com/ensayiti/hermes-vacuum/main/install.sh | bash
+```
+
+Manual alternative if the 1 liner is blocked:
+
+```bash
+git clone https://github.com/ensayiti/hermes-vacuum
 hermes skills install ./hermes-vacuum --name hermes-vacuum
+# if Could not fetch appears on Windows, the 1 liner above handles it via direct copy
 hermes skills list  # ensure hermes-vacuum appears
 ```
 

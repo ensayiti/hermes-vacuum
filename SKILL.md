@@ -1,7 +1,7 @@
 ---
 name: hermes-vacuum
 description: "Safe deep clean cache system without touching OS, dry run default, allowlist only, per file skip on lock."
-version: 0.1.3
+version: 0.1.4
 metadata:
   hermes:
     tags: [system, cleaner, cache, disk, windows, macos, linux, safe]

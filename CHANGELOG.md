@@ -2,6 +2,16 @@
 
 All notable changes to `hermes-vacuum` are documented here. Format follows Keep a Changelog, versioning follows Semantic Versioning.
 
+## [0.1.4] 2026-08-31
+
+### Added
+
+* One line installer. `install.ps1` for Windows `irm | iex` and `install.sh` for macOS and Linux `curl | bash`, handles `git` or zip fallback and copies to `productivity/hermes-vacuum`, fixes `Could not fetch` on Windows
+
+### Changed
+
+* README Installation now shows 1 liner as primary, manual `git clone` as fallback
+
 ## [0.1.3] 2026-08-31
 
 ### Fixed
@@ -60,6 +70,7 @@ All notable changes to `hermes-vacuum` are documented here. Format follows Keep 
 * Hard block for `System32`, `WinSxS`, `Program Files`, `/System`, `/usr`
 * Threshold `>500MB` goes to confirmation list, no auto deletion in `quick`
 
+[0.1.4]: https://github.com/ensayiti/hermes-vacuum/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/ensayiti/hermes-vacuum/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/ensayiti/hermes-vacuum/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/ensayiti/hermes-vacuum/compare/v0.1.0...v0.1.1
