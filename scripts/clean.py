@@ -204,10 +204,10 @@ def main():
 
     # deep needs admin
     if mode == "deep" and not is_admin():
-        print("❌ Deep clean butuh Admin. Hermes lu jalan sebagai user biasa.")
-        print("   Jalankan elevasi manual (akan muncul UAC):")
+        print("❌ Deep clean requires Admin. Hermes is running as normal user.")
+        print("   Run elevation manually (UAC will appear):")
         print('   powershell -Command "Start-Process python -ArgumentList \'D:/Code/hermes-vacuum/scripts/clean.py deep\' -Verb RunAs"')
-        print("   atau: run Terminal as Administrator -> python D:/Code/hermes-vacuum/scripts/clean.py deep")
+        print("   or: run Terminal as Administrator -> python D:/Code/hermes-vacuum/scripts/clean.py deep")
         if "docker" in with_flags:
             print("   + docker: powershell -Command \"Start-Process python -ArgumentList 'D:/Code/hermes-vacuum/scripts/clean.py deep --with docker' -Verb RunAs\"")
         sys.exit(1)
@@ -274,15 +274,15 @@ def main():
         age = int((now-mt)/86400)
         print(f"  {fmt_size(sz):>9}  {age:>3}d  {p}")
     if confirm:
-        print(f"Confirm needed (>500MB or >30d): {len(confirm)} file, tidak auto di quick, butuh deep confirm")
+        print(f"Confirm needed (>500MB or >30d): {len(confirm)} file, not auto in quick, needs deep confirm")
         for p, sz in confirm[:5]: print(f"  {fmt_size(sz)} {p}")
         if len(confirm)>5: print(f"  ... +{len(confirm)-5} more")
     print(f"Disk free before: {fmt_size(free_before)}")
 
     if mode in ("dry-run","status"):
-        print(f"\n[dry-run] Tidak ada file dihapus. Jalankan:")
-        print(f"  python scripts/clean.py quick              # tanpa Admin, include Hermes cache")
-        print(f"  python scripts/clean.py deep               # + dev cache + thumb, butuh Admin")
+        print(f"\n[dry-run] No files deleted. Run:")
+        print(f"  python scripts/clean.py quick              # no Admin, includes Hermes cache")
+        print(f"  python scripts/clean.py deep               # + dev cache + thumb, requires Admin")
         print(f"  python scripts/clean.py deep --with docker # + docker prune")
         # save tracked.json
         save_tracked(mode, with_flags, files, total)
@@ -294,7 +294,7 @@ def main():
         # quick jangan hapus confirm list >500MB
         to_delete = [(p,sz,mt) for p,sz,mt in files if not (sz > 500*1024*1024)]
         if len(to_delete) != len(files):
-            print(f"Skip {len(files)-len(to_delete)} file >500MB (butuh deep)")
+            print(f"Skipped {len(files)-len(to_delete)} file >500MB (needs deep)")
     else:
         to_delete = files
 
@@ -345,13 +345,13 @@ def main():
     gained = free_after, free_before
 
     print(f"\n=== HASIL ===")
-    print(f"Dihapus: {deleted_cnt} file, {fmt_size(reclaimed)} (reclaimed)")
-    print(f"Skip: {len(skipped)} file")
+    print(f"Deleted: {deleted_cnt} file, {fmt_size(reclaimed)} (reclaimed)")
+    print(f"Skipped: {len(skipped)} file")
     if skipped:
         from collections import Counter
         c = Counter(r for _, r in skipped)
         for k,v in c.items(): print(f"  {k}: {v}")
-        print("Contoh skip (5 pertama):")
+        print("Example skipped (first 5):")
         for p,r in skipped[:5]: print(f"  {r} {p}")
     print(f"Disk free before: {fmt_size(free_before)} → after: {fmt_size(free_after)} (gain: {fmt_size(gained)})")
     if docker_msg: print(docker_msg)

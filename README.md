@@ -1,37 +1,37 @@
 # hermes-vacuum
 
-Safe deep clean cache untuk Hermes Agent. Hapus sampah sistem tanpa sentuh file OS. Stdlib only, allowlist only, preview dulu sebelum hapus.
+Safe deep cache cleaning for Hermes Agent. Remove system junk without touching OS files. Stdlib only, allowlist only, preview before deletion.
 
-> Deep Clean versi ponytail. `quick` tanpa Admin, `deep` baru minta UAC. Hermes cache ikut kehitung.
+> Ponytail style Deep Clean. `quick` needs no Admin, `deep` prompts for UAC. Hermes cache is included.
 
 ![Hermes](https://img.shields.io/badge/Hermes-Skill-blue) ![Python](https://img.shields.io/badge/Python-stdlib%20only-green) ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
-## Kenapa hermes-vacuum
+## Why hermes-vacuum
 
-Disk penuh karena `Temp`, `npm-cache`, `cargo`, `thumbcache`, `Hermes cache` yang menumpuk. `disk-cleanup` bawaan Hermes cuma bersihin file Hermes. `hermes-vacuum` lanjut bersihin cache sistem yang aman, dengan preview total reclaimable dan laporan skip kalau file lagi dipakai.
+Disk fills up from `Temp`, `npm-cache`, `cargo`, `thumbcache`, `Hermes cache` piling up. The built-in Hermes `disk-cleanup` only cleans Hermes files. `hermes-vacuum` goes further to clean safe system caches, with preview of total reclaimable and a skip report if files are in use.
 
-## Fitur
+## Features
 
-* Preview dulu, hapus belakangan. `dry-run` default, tidak ada file terhapus tanpa konfirmasi
-* Tiga mode jelas. `quick`, `deep`, `status`. Total file dan total GB selalu kelihatan
-* Aman by default. Hanya hapus di allowlist, file OS seperti `System32` dan `WinSxS` selalu ditolak
-* Hermes cache ikut. `$HERMES_HOME/cache` masuk `quick`, jadi cache web Hermes yang bengkak ikut kehitung
-* Deep Clean beneran. `deep` include dev cache `npm`, `pip`, `cargo`, `uv` plus `thumbcache` tanpa flag tambahan
-* Skip bukan gagal. File yang lagi dipakai di skip, 1 file ke lock tidak bikin 1 folder gagal
-* Jalan di semua surface. CLI, Desktop, Dashboard pakai skill yang sama
+* Preview first, delete later. `dry-run` is default, no file is deleted without confirmation
+* Three clear modes. `quick`, `deep`, `status`. Total files and total GB are always visible
+* Safe by default. Only deletes inside allowlist, OS files like `System32` and `WinSxS` are always rejected
+* Hermes cache included. `$HERMES_HOME/cache` is part of `quick`, so bloated Hermes web cache is counted
+* Real Deep Clean. `deep` includes dev caches `npm`, `pip`, `cargo`, `uv` plus `thumbcache` with no extra flag
+* Skip, not fail. Files in use are skipped, 1 locked file does not fail 1 folder
+* Runs on every surface. CLI, Desktop, Dashboard use the same skill
 
-## Keamanan
+## Security
 
-* `is_safe_path()` allowlist only. Path tidak ada di allowlist otomatis `REJECT`, tidak pernah `DELETE`
-* Block OS core. `C:/Windows/System32`, `WinSxS`, `Program Files`, `/System`, `/usr` hard reject
-* Canonical dedup. `%TEMP%` dan `C:/Users/XEM/AppData/Local/Temp` di `realpath` dulu biar tidak dobel scan
-* Tanpa silent Admin. `deep` cek `is_admin()`, kalau false langsung kasih command elevasi `powershell Start-Process -Verb RunAs`, tidak auto elevate
+* `is_safe_path()` allowlist only. Any path not in allowlist is automatically `REJECT`, never `DELETE`
+* OS core blocked. `C:/Windows/System32`, `WinSxS`, `Program Files`, `/System`, `/usr` are hard rejected
+* Canonical dedup. `%TEMP%` and `C:/Users/XEM/AppData/Local/Temp` are resolved via `realpath` first to avoid double scanning
+* No silent Admin. `deep` checks `is_admin()`, if false it immediately returns the elevation command `powershell Start-Process -Verb RunAs`, no auto elevation
 
-## Instalasi
+## Installation
 
 ```bash
 hermes skills install D:/Code/hermes-vacuum --name hermes-vacuum
-hermes skills list  # pastikan hermes-vacuum muncul
+hermes skills list  # ensure hermes-vacuum appears
 ```
 
 Update:
@@ -40,13 +40,13 @@ Update:
 hermes skills update hermes-vacuum
 ```
 
-Hapus:
+Remove:
 
 ```bash
 hermes skills remove hermes-vacuum
 ```
 
-## Cara Pakai
+## How to Use
 
 ### Hermes CLI
 
@@ -58,27 +58,27 @@ hermes
 > /safe-cleanup deep --with docker
 > /safe-cleanup status
 
-# one shot tanpa masuk chat
+# one shot without entering chat
 hermes chat -q "/safe-cleanup dry-run"
 hermes chat -q "/safe-cleanup status"
 ```
 
-Natural language juga bisa:
+Natural language also works:
 
 ```
-bersihin cache dong
-vacuum deep dong, preview dulu
+clean cache please
+vacuum deep please, preview first
 ```
 
 ### Hermes Desktop
 
-1. Buka `hermes desktop`, pilih profile `default`
-2. Di chat tengah ketik `/safe-cleanup dry-run` lalu Enter
-3. Atau `Ctrl+K` lalu ketik `safe-cleanup`
-4. Output tabel preview dan ringkasan `Dihapus X GB` muncul streaming, sama seperti CLI
-5. File log ada di File Browser kiri di `$HERMES_HOME/hermes-vacuum/cleanup.log`
+1. Open `hermes desktop`, select profile `default`
+2. In the center chat type `/safe-cleanup dry-run` then press Enter
+3. Or press `Ctrl+K` then type `safe-cleanup`
+4. Preview table output and `Deleted X GB` summary streams in, same as CLI
+5. Log file is in the left File Browser at `$HERMES_HOME/hermes-vacuum/cleanup.log`
 
-CLI dan Desktop pakai `tracked.json` yang sama, jadi `dry-run` di CLI terbaca `status` di Desktop.
+CLI and Desktop share the same `tracked.json`, so `dry-run` in CLI is visible as `status` in Desktop.
 
 ### Hermes Dashboard Web UI
 
@@ -87,22 +87,22 @@ hermes dashboard
 # buka http://localhost:3000
 ```
 
-* Tab Skills: lihat `hermes-vacuum` terinstall
-* Tab Chat: ketik `/safe-cleanup dry-run` di chat embedded, hasil sama persis
-* Belum ada tab Vacuum khusus dengan tombol. Itu sengaja ponytail, chat sudah cukup. Tab khusus hanya ditambah kalau diminta.
+* Skills tab: see `hermes-vacuum` installed
+* Chat tab: type `/safe-cleanup dry-run` in the embedded chat, result is identical
+* No dedicated Vacuum tab with buttons yet. This is intentional ponytail, chat is enough. A dedicated tab will only be added on request.
 
-## Perintah
+## Commands
 
-| Perintah | Butuh Admin | Apa yang dihapus |
+| Command | Requires Admin | What gets deleted |
 | --- | --- | --- |
-| `/safe-cleanup dry-run` | Tidak | Preview semua tier, tidak hapus. Breakdown per base, total reclaimable, top 10 terbesar |
-| `/safe-cleanup quick` | Tidak | `%TEMP%`, `%LOCALAPPDATA%/Temp`, `~/Library/Caches`, `~/.cache`, `/tmp` plus `$HERMES_HOME/cache` |
-| `/safe-cleanup deep` | Ya | `quick` plus `C:/Windows/Temp`, `SoftwareDistribution/Download`, dev cache `npm`, `pip`, `cargo`, `uv` plus `thumbcache` |
-| `/safe-cleanup deep --with docker` | Ya | `deep` plus `docker builder prune` |
-| `/safe-cleanup deep --with pnpm` | Ya | `deep` plus `pnpm store` (heavy, 562MB, opt in biar dry run tetap cepat) |
-| `/safe-cleanup status` | Tidak | Sama seperti dry run, baca dari `tracked.json` terakhir |
+| `/safe-cleanup dry-run` | No | Preview all tiers, no deletion. Per base breakdown, total reclaimable, top 10 largest |
+| `/safe-cleanup quick` | No | `%TEMP%`, `%LOCALAPPDATA%/Temp`, `~/Library/Caches`, `~/.cache`, `/tmp` plus `$HERMES_HOME/cache` |
+| `/safe-cleanup deep` | Yes | `quick` plus `C:/Windows/Temp`, `SoftwareDistribution/Download`, dev caches `npm`, `pip`, `cargo`, `uv` plus `thumbcache` |
+| `/safe-cleanup deep --with docker` | Yes | `deep` plus `docker builder prune` |
+| `/safe-cleanup deep --with pnpm` | Yes | `deep` plus `pnpm store` (heavy, 562MB, opt in to keep dry run fast) |
+| `/safe-cleanup status` | No | Same as dry run, reads from latest `tracked.json` |
 
-## Contoh Preview dan Hasil
+## Example Preview and Result
 
 **Preview:**
 
@@ -115,14 +115,14 @@ Breakdown per base:
 Top 10:
   447MB  huggingface model
 Disk free before: 25.8GB
-[dry-run] Tidak ada file dihapus.
+[dry-run] No files deleted.
 ```
 
-**Hasil setelah `quick`:**
+**Result after `quick`:**
 
 ```
 /safe-cleanup quick
-Dihapus: 805 file, 1.1GB
+Deleted: 805 file, 1.1GB
 Skip: 37 file
   LOCKED: 32
   ACCESS_DENIED: 5
@@ -130,49 +130,49 @@ Disk free before: 25.8GB after: 26.9GB (gain: 1.1GB)
 Log: C:/Users/XEM/AppData/Local/hermes/hermes-vacuum/cleanup.log
 ```
 
-## Allowlist Detail
+## Allowlist Details
 
-**quick tanpa Admin, include Hermes cache:**
+**quick without Admin, includes Hermes cache:**
 * Windows: `%TEMP%`, `%LOCALAPPDATA%/Temp`, `%LOCALAPPDATA%/Microsoft/Windows/INetCache` plus `%LOCALAPPDATA%/hermes/cache`
 * macOS: `~/Library/Caches`, `~/Library/Logs`
 * Linux: `~/.cache`, `/tmp`, `/var/tmp` plus `~/.hermes/cache`
 
-**deep butuh Admin, Deep Clean plus dev cache plus thumb default:**
+**deep requires Admin, Deep Clean plus dev cache plus thumb by default:**
 * Windows: `C:/Windows/Temp`, `C:/Windows/SoftwareDistribution/Download` plus `npm-cache`, `pip Cache`, `cargo`, `uv` plus `thumbcache`
 * Linux: `journalctl --vacuum-time=7d`
 * macOS: `DerivedData`, `CoreSimulator`
 
 **Opt in extra `--with`:**
-* `docker` pakai `docker builder prune -f` dengan preview `docker system df`, opt in karena bisa hapus image yang masih dipakai
-* `pnpm` pakai `%LOCALAPPDATA%/pnpm/store`, opt in karena heavy dan bikin dry run lambat
+* `docker` uses `docker builder prune -f` with `docker system df` preview, opt in because it can remove images still in use
+* `pnpm` uses `%LOCALAPPDATA%/pnpm/store`, opt in because it is heavy and makes dry run slow
 
-**Tidak pernah disentuh:**
-`C:/Windows/System32`, `WinSxS`, `Program Files`, `~/Library/Application Support` sembarangan, `/System`, `/usr`, `/etc`
+**Never touched:**
+`C:/Windows/System32`, `WinSxS`, `Program Files`, `~/Library/Application Support` random, `/System`, `/usr`, `/etc`
 
 ## FAQ
 
-**Apakah file yang lagi dipakai bakal bikin error?**
-Tidak. Per file pakai `try/except`, kalau `LOCKED` atau `ACCESS_DENIED` langsung di skip dan dilaporin di akhir. 1 file ke lock tidak bikin 1 folder gagal.
+**Will files that are in use cause an error?**
+No. Per file uses `try/except`, if `LOCKED` or `ACCESS_DENIED` it is skipped and reported at the end. 1 locked file does not fail 1 folder.
 
-**Apakah `Temp` dan `%TEMP%` dobel kehitung?**
-Tidak. Keduanya di `realpath` dulu, kalau resolve sama cuma scan sekali.
+**Will `Temp` and `%TEMP%` be double counted?**
+No. Both are resolved via `realpath` first, if they resolve to the same path they are scanned once.
 
-**Apakah perlu Run as Administrator terus?**
-Tidak. Cukup `quick` dan `dry-run` tanpa Admin. `deep` saja yang butuh Admin dan akan muncul UAC. Hermes tetap jalan sebagai user biasa.
+**Do I need to Run as Administrator every time?**
+No. `quick` and `dry-run` need no Admin. Only `deep` needs Admin and will trigger UAC. Hermes keeps running as a regular user.
 
-**Apakah jalan di semua model?**
-Ya. LLM cuma parse intent `quick` atau `deep`, yang hapus itu `scripts/clean.py` yang deterministik. Jadi model ranking bawah yang kadang salah baca SKILL.md tetap ke block `is_safe()`.
+**Does it work on every model?**
+Yes. The LLM only parses intent `quick` or `deep`, the actual deletion is done by `scripts/clean.py` deterministically. So even lower ranked models that sometimes misread SKILL.md are still blocked by `is_safe()`.
 
-**Apakah cache Hermes sudah ikut?**
-Ya. `$HERMES_HOME/cache` masuk `quick` sejak v0.1.1, jadi cache web Hermes yang kemarin 8MB ikut kehitung.
+**Is Hermes cache already included?**
+Yes. `$HERMES_HOME/cache` has been part of `quick` since v0.1.1, so Hermes web cache that was 8MB is now counted.
 
-## Dokumen Lanjutan
+## Further Documentation
 
 * `docs/PRD.md` Product Requirements
-* `docs/ERD.md` Entity Relationship plus schema `tracked.json`
-* `docs/ARCHITECTURE.md` Desain ponytail, scan `O(n)` plus mitigasi lock
-* `docs/TASKS.md` Checklist dev
+* `docs/ERD.md` Entity Relationship plus `tracked.json` schema
+* `docs/ARCHITECTURE.md` Ponytail design, `O(n)` scan plus lock mitigation
+* `docs/TASKS.md` Dev checklist
 
-## Lisensi
+## License
 
 MIT

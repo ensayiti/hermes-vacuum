@@ -1,38 +1,38 @@
-# ARCHITECTURE, hermes-vacuum
+# ARCHITECTURE hermes vacuum
 
-Ponytail FULL, shortest diff that works.
+Ponytail FULL shortest diff that works.
 
-## 1. Diagram Alir (mermaid)
+## 1. Flow Diagram (mermaid)
 
 ```mermaid
 flowchart TD
     A[User: /safe-cleanup dry-run/quick/deep] --> B{Parse mode + --with}
-    B --> C[Resolve allowlist\n expandvars + realpath + dedup ]
+    B --> C[Resolve allowlist expandvars + realpath + dedup ]
     C --> D{is_safe_path?}
     D, REJECT --> L[Log REJECT + skip]
     D, OK --> E{deep && not is_admin?}
-    E, yes --> F[Block + kasih command elevasi\n powershell Start-Process -Verb RunAs / sudo]
-    E, no --> G[Scan O(n) walk\n hitung size+age]
+    E, yes --> F[Block + provide elevation command powershell Start-Process -Verb RunAs / sudo]
+    E, no --> G[Scan O(n) walk calculate size and age]
     G --> H{mode == dry-run?}
-    H, yes --> I[Tabel preview + total reclaimable\n + confirm list >500MB]
-    H, no --> J[Per-file try: unlink\n except PermissionError/OSError: skipped.append]
-    J --> K[Log DELETE/SKIP ke cleanup.log\n + ringkasan]
-    K --> M[Return: Dihapus X GB, N file, skip M, locked]
+    H, yes --> I[Table preview + total reclaimable + confirm list >500MB]
+    H, no --> J[Per file try: unlink except PermissionError/OSError: skipped.append]
+    J --> K[Log DELETE/SKIP to cleanup.log + summary]
+    K --> M[Return: Deleted X GB, N files, skip M, locked]
 ```
 
-## 2. Komponen (3 file inti)
+## 2. Components (3 core files)
 
 ```
-SKILL.md              → prompt Hermes (kapan & gimana pakai skill)
-scripts/clean.py      → satu file stdlib: is_admin, is_safe_path, scan, clean, log
+SKILL.md              → prompt Hermes (when and how to use skill)
+scripts/clean.py      → single file stdlib: is_admin, is_safe_path, scan, clean, log
 $HERMES_HOME/hermes-vacuum/
-  tracked.json        → state terakhir (jobs, last_scan)
-  cleanup.log         → audit append-only
+  tracked.json        → last state (jobs, last_scan)
+  cleanup.log         → audit append only
 ```
 
-**Kenapa 1 script?** Ladder rung 3, stdlib cukup. `os`, `pathlib`, `shutil`, `ctypes`, `json`, `subprocess` cover semua. No `click`, no `rich`, no `send2trash`.
+**Why 1 script?** Ladder rung 3 stdlib is enough. `os`, `pathlib`, `shutil`, `ctypes`, `json`, `subprocess` cover all. No `click`, no `rich`, no `send2trash`.
 
-## 3. is_safe_path (jantung safety)
+## 3. is_safe_path (safety core)
 
 ```python
 import os, pathlib
@@ -61,7 +61,7 @@ def is_admin() -> bool:
     except: return os.geteuid() == 0
 ```
 
-## 4. Mitigasi File Tidak Bisa Dihapus
+## 4. Mitigation for Undeletable Files
 
 ```python
 # ponytail: per-file try, O(n) scan, parallel walk if >50k files
@@ -83,23 +83,23 @@ for f in files:  # files dari scan()
         continue  # jangan crash 1 folder
 ```
 
-* Dedupe: `seen = set(realpath(expandvars(p)) for p in allowlist)` → `%TEMP%` vs `C:/Windows/Temp` kalau resolve sama cuma scan sekali
+* Dedupe: `seen = set(realpath(expandvars(p)) for p in allowlist)` → `%TEMP%` vs `C:/Windows/Temp` if resolve to same path scan once only
 * Native tool: `npm cache clean --force` via `subprocess.run` > `rm -rf`, `cleanmgr` > manual thumb delete
 
-## 5. State & Log (mirip disk-cleanup)
+## 5. State and Log (similar to disk cleanup)
 
-- Atomic write: `write .tmp → backup tracked.json.bak → rename`
-- `cleanup.log` append-only: `2026-08-30T13:18:00 DELETE /path size category`
-- Tidak pernah sentuh `logs/`, `memories/`, `sessions/`, `skills/` Hermes
+* Atomic write: `write .tmp → backup tracked.json.bak → rename`
+* `cleanup.log` append only: `2026-08-30T13:18:00 DELETE /path size category`
+* Never touch `logs/`, `memories/`, `sessions/`, `skills/` of Hermes
 
 ## 6. Platform Notes
 
-- **Windows:** `%TEMP%` tidak butuh Admin, `C:\Windows\Temp` butuh. `SoftwareDistribution\Download` → `net stop wuauserv` dulu baru hapus (hanya `deep` + Admin)
-- **Mac/Linux:** `sudo` untuk `journalctl --vacuum-time=7d`, bukan `rm /var/log`
-- **Hermes Desktop:** tetap user biasa, elevasi hanya untuk command `deep` via UAC prompt OS
+* **Windows:** `%TEMP%` does not need Admin, `C:\Windows\Temp` needs it. `SoftwareDistribution\Download` → `net stop wuauserv` first then delete (only `deep` plus Admin)
+* **Mac/Linux:** `sudo` for `journalctl --vacuum-time=7d`, not `rm /var/log`
+* **Hermes Desktop:** stays as regular user, elevation only for `deep` command via OS UAC prompt
 
 ## 7. Skipped Next
 
-- Cron `hermes-vacuum quick` mingguan (pakai `cronjob` Hermes, bukan di skill)
-- `--with` auto-detect (cek `npm --version` ada baru tawarin `npm`)
-- Parallel walk (`concurrent.futures`) kalau >50k file, add when scan >10s terukur
+* Weekly cron `hermes-vacuum quick` (use Hermes `cronjob`, not in skill)
+* `--with` auto detect (check `npm --version` exists then offer `npm`)
+* Parallel walk (`concurrent.futures`) if `>50k` files, add when scan exceeds 10s measured
