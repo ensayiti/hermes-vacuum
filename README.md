@@ -68,15 +68,17 @@ hermes skills remove hermes-vacuum
 
 ```bash
 hermes
-> /safe-cleanup dry-run
-> /safe-cleanup quick
-> /safe-cleanup deep
-> /safe-cleanup deep --with docker
-> /safe-cleanup status
+> /hermes-vacuum dry-run
+> /hermes-vacuum quick
+> /hermes-vacuum deep
+> /hermes-vacuum deep --with docker
+> /hermes-vacuum status
 
 # one shot without entering chat
+hermes chat -q "/hermes-vacuum dry-run"
+hermes chat -q "/hermes-vacuum status"
+# alias also works
 hermes chat -q "/safe-cleanup dry-run"
-hermes chat -q "/safe-cleanup status"
 ```
 
 Natural language also works:
@@ -89,8 +91,8 @@ vacuum deep please, preview first
 ### Hermes Desktop
 
 1. Open `hermes desktop`, select profile `default`
-2. In the center chat type `/safe-cleanup dry-run` then press Enter
-3. Or press `Ctrl+K` then type `safe-cleanup`
+2. In the center chat type `/hermes-vacuum dry-run` then press Enter
+3. Or press `Ctrl+K` then type `hermes-vacuum`
 4. Preview table output and `Deleted X GB` summary streams in, same as CLI
 5. Log file is in the left File Browser at `$HERMES_HOME/hermes-vacuum/cleanup.log`
 
@@ -104,26 +106,29 @@ hermes dashboard
 ```
 
 * Skills tab: see `hermes-vacuum` installed
-* Chat tab: type `/safe-cleanup dry-run` in the embedded chat, result is identical
+* Chat tab: type `/hermes-vacuum dry-run` in the embedded chat, result is identical
+* Alias `/safe-cleanup` also works in Chat tab
 * No dedicated Vacuum tab with buttons yet. This is intentional ponytail, chat is enough. A dedicated tab will only be added on request.
 
 ## Commands
 
 | Command | Requires Admin | What gets deleted |
 | --- | --- | --- |
-| `/safe-cleanup dry-run` | No | Preview all tiers, no deletion. Per base breakdown, total reclaimable, top 10 largest |
-| `/safe-cleanup quick` | No | `%TEMP%`, `%LOCALAPPDATA%/Temp`, `~/Library/Caches`, `~/.cache`, `/tmp` plus `$HERMES_HOME/cache` |
-| `/safe-cleanup deep` | Yes | `quick` plus `C:/Windows/Temp`, `SoftwareDistribution/Download`, dev caches `npm`, `pip`, `cargo`, `uv` plus `thumbcache` |
-| `/safe-cleanup deep --with docker` | Yes | `deep` plus `docker builder prune` |
-| `/safe-cleanup deep --with pnpm` | Yes | `deep` plus `pnpm store` (heavy, 562MB, opt in to keep dry run fast) |
-| `/safe-cleanup status` | No | Same as dry run, reads from latest `tracked.json` |
+| `/hermes-vacuum dry-run` | No | Preview all tiers, no deletion. Per base breakdown, total reclaimable, top 10 largest |
+| `/hermes-vacuum quick` | No | `%TEMP%`, `%LOCALAPPDATA%/Temp`, `~/Library/Caches`, `~/.cache`, `/tmp` plus `$HERMES_HOME/cache` |
+| `/hermes-vacuum deep` | Yes | `quick` plus `C:/Windows/Temp`, `SoftwareDistribution/Download`, dev caches `npm`, `pip`, `cargo`, `uv` plus `thumbcache` |
+| `/hermes-vacuum deep --with docker` | Yes | `deep` plus `docker builder prune` |
+| `/hermes-vacuum deep --with pnpm` | Yes | `deep` plus `pnpm store` (heavy, 562MB, opt in to keep dry run fast) |
+| `/hermes-vacuum status` | No | Same as dry run, reads from latest `tracked.json` |
+
+Alias `/safe-cleanup` works for all commands via `hermes chat -q` and natural language.
 
 ## Example Preview and Result
 
 **Preview:**
 
 ```
-/safe-cleanup dry-run
+/hermes-vacuum dry-run
 Total scannable: 50689 file, 4.5GB reclaimable
 Breakdown per base:
   3.2GB  10726 file  %TEMP%
@@ -137,7 +142,7 @@ Disk free before: 25.8GB
 **Result after `quick`:**
 
 ```
-/safe-cleanup quick
+/hermes-vacuum quick
 Deleted: 805 file, 1.1GB
 Skip: 37 file
   LOCKED: 32

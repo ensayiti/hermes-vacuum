@@ -42,8 +42,9 @@ metadata:
 
 ## Slash
 
-- `/safe-cleanup dry-run`              # preview all tiers
-- `/safe-cleanup quick`                # no Admin, includes Hermes cache, excludes dev cache and thumb
-- `/safe-cleanup deep`                 # Deep Clean: system temp plus dev cache plus thumb plus Hermes cache by default
-- `/safe-cleanup deep --with docker`   # plus docker builder prune extra
-- `/safe-cleanup status`
+- `/hermes-vacuum dry-run`              # preview all tiers
+- `/hermes-vacuum quick`                # no Admin, includes Hermes cache, excludes dev cache and thumb
+- `/hermes-vacuum deep`                 # Deep Clean: system temp plus dev cache plus thumb plus Hermes cache by default
+- `/hermes-vacuum deep --with docker`   # plus docker builder prune extra
+- `/hermes-vacuum status`
+- Alias `/safe-cleanup` also works via `hermes chat -q` and natural language
