@@ -1,7 +1,7 @@
 # PRD, hermes-vacuum
 
-**Version:** 0.1.0, 2026-08-30
-**Owner:** XEM, Hermes Agent Skill
+**Version:** 0.1.2, 2026-08-31
+**Owner:** Hermes Agent Skill
 **Status:** Draft to Ready for dev
 **Ponytail:** full, deletion over addition, stdlib first
 
@@ -36,7 +36,7 @@
 
 ## 3. User Persona
 
-* **Solo Dev (primary, you):** D:/Code full of cache, wants daily `quick` without Admin
+* **Solo Dev (primary):** dev cache under local paths, wants daily `quick` without Admin
 * **Power User:** Wants monthly `deep`, understands UAC, `deep` directly includes dev cache plus thumb, `docker` as extra when requested (`--with docker`)
 * **Non tech (future):** Only comfortable with `dry-run` plus `status`
 

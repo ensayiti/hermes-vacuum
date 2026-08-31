@@ -2,6 +2,12 @@
 
 All notable changes to `hermes-vacuum` are documented here. Format follows Keep a Changelog, versioning follows Semantic Versioning.
 
+## [0.1.3] 2026-08-31
+
+### Fixed
+
+* Privacy, remove PII from docs and scripts. Replace `C:/Users/XEM/...` and `D:/Code/hermes-vacuum` with generic `$HERMES_HOME`, `%TEMP%` and `./scripts/clean.py` in `README.md`, `CHANGELOG.md`, `docs/PRD.md`, `scripts/clean.py`
+
 ## [0.1.2] 2026-08-31
 
 ### Added
@@ -32,7 +38,7 @@ All notable changes to `hermes-vacuum` are documented here. Format follows Keep 
 
 ### Fixed
 
-* Canonical dedup for `%TEMP%` versus `C:/Users/XEM/AppData/Local/Temp` to avoid double scanning
+* Canonical dedup for `%TEMP%` versus its resolved path to avoid double scanning
 * OS filter. `/tmp` and `/var/tmp` are skipped automatically on Windows to avoid scanning `D:/tmp` which is irrelevant
 * `is_safe()` uses lower case string prefix for speed across 50 thousand files, still strict allowlist only
 
@@ -54,6 +60,7 @@ All notable changes to `hermes-vacuum` are documented here. Format follows Keep 
 * Hard block for `System32`, `WinSxS`, `Program Files`, `/System`, `/usr`
 * Threshold `>500MB` goes to confirmation list, no auto deletion in `quick`
 
+[0.1.3]: https://github.com/ensayiti/hermes-vacuum/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/ensayiti/hermes-vacuum/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/ensayiti/hermes-vacuum/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ensayiti/hermes-vacuum/releases/tag/v0.1.0

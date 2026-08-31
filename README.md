@@ -24,13 +24,15 @@ Disk fills up from `Temp`, `npm-cache`, `cargo`, `thumbcache`, `Hermes cache` pi
 
 * `is_safe_path()` allowlist only. Any path not in allowlist is automatically `REJECT`, never `DELETE`
 * OS core blocked. `C:/Windows/System32`, `WinSxS`, `Program Files`, `/System`, `/usr` are hard rejected
-* Canonical dedup. `%TEMP%` and `C:/Users/XEM/AppData/Local/Temp` are resolved via `realpath` first to avoid double scanning
+* Canonical dedup. `%TEMP%` and its resolved path are deduped via `realpath` first to avoid double scanning
 * No silent Admin. `deep` checks `is_admin()`, if false it immediately returns the elevation command `powershell Start-Process -Verb RunAs`, no auto elevation
 
 ## Installation
 
 ```bash
-hermes skills install D:/Code/hermes-vacuum --name hermes-vacuum
+hermes skills install https://raw.githubusercontent.com/ensayiti/hermes-vacuum/main/SKILL.md --name hermes-vacuum
+# or local
+hermes skills install ./hermes-vacuum --name hermes-vacuum
 hermes skills list  # ensure hermes-vacuum appears
 ```
 
@@ -110,7 +112,7 @@ hermes dashboard
 /safe-cleanup dry-run
 Total scannable: 50689 file, 4.5GB reclaimable
 Breakdown per base:
-  3.2GB  10726 file  C:/Users/XEM/AppData/Local/Temp
+  3.2GB  10726 file  %TEMP%
   407MB  28263 file  npm-cache
 Top 10:
   447MB  huggingface model
@@ -127,7 +129,7 @@ Skip: 37 file
   LOCKED: 32
   ACCESS_DENIED: 5
 Disk free before: 25.8GB after: 26.9GB (gain: 1.1GB)
-Log: C:/Users/XEM/AppData/Local/hermes/hermes-vacuum/cleanup.log
+Log: $HERMES_HOME/hermes-vacuum/cleanup.log
 ```
 
 ## Allowlist Details

@@ -206,10 +206,10 @@ def main():
     if mode == "deep" and not is_admin():
         print("❌ Deep clean requires Admin. Hermes is running as normal user.")
         print("   Run elevation manually (UAC will appear):")
-        print('   powershell -Command "Start-Process python -ArgumentList \'D:/Code/hermes-vacuum/scripts/clean.py deep\' -Verb RunAs"')
-        print("   or: run Terminal as Administrator -> python D:/Code/hermes-vacuum/scripts/clean.py deep")
+        print('   powershell -Command "Start-Process python -ArgumentList \'./scripts/clean.py deep\' -Verb RunAs"')
+        print("   or: run Terminal as Administrator -> python ./scripts/clean.py deep")
         if "docker" in with_flags:
-            print("   + docker: powershell -Command \"Start-Process python -ArgumentList 'D:/Code/hermes-vacuum/scripts/clean.py deep --with docker' -Verb RunAs\"")
+            print("   + docker: powershell -Command \"Start-Process python -ArgumentList './scripts/clean.py deep --with docker' -Verb RunAs\"")
         sys.exit(1)
 
     # get allowed
